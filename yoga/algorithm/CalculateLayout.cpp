@@ -1086,12 +1086,17 @@ static float distributeFreeSpaceSecondPass(
   const bool isNodeFlexWrap = node->style().flexWrap() != Wrap::NoWrap;
 
   for (auto currentLineChild : flexLine.itemsInFlow) {
+    const float minMaxAxisSize =
+        currentLineChild->hasErrata(
+            Errata::FlexItemPercentMinMaxAgainstOwner)
+        ? mainAxisOwnerSize
+        : availableInnerMainDim;
     childFlexBasis = boundAxisWithinMinAndMax(
                          currentLineChild,
                          direction,
                          mainAxis,
                          currentLineChild->getLayout().computedFlexBasis,
-                         mainAxisOwnerSize,
+                         minMaxAxisSize,
                          ownerWidth)
                          .unwrap();
     float updatedMainSize = childFlexBasis;
@@ -1301,12 +1306,17 @@ static void distributeFreeSpaceFirstPass(
       flexLine.layout.totalFlexShrinkScaledFactors;
 
   for (auto currentLineChild : flexLine.itemsInFlow) {
+    const float minMaxAxisSize =
+        currentLineChild->hasErrata(
+            Errata::FlexItemPercentMinMaxAgainstOwner)
+        ? mainAxisOwnerSize
+        : availableInnerMainDim;
     float childFlexBasis = boundAxisWithinMinAndMax(
                                currentLineChild,
                                direction,
                                mainAxis,
                                currentLineChild->getLayout().computedFlexBasis,
-                               mainAxisOwnerSize,
+                               minMaxAxisSize,
                                ownerWidth)
                                .unwrap();
 
